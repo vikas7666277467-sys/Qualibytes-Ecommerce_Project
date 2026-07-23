@@ -16,6 +16,9 @@ RUN npm ci
 # Copy all project files
 COPY . .
 
+# Increase Node.js memory
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+
 # Build the Next.js application
 RUN npm run build
 
