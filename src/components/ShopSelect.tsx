@@ -35,12 +35,6 @@ const ShopSelect = () => {
     }
   }, [router]);
 
-  useEffect(() => {
-    if (selectedShop) {
-      handleSelectShop(selectedShop.title);
-    }
-  }, [selectedShop, handleSelectShop]);
-
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger className="min-w-[70px] max-w-fit bg-accent pl-2 pr-3 rounded-lg border">

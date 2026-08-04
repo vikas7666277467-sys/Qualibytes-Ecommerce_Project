@@ -12,9 +12,11 @@ const RelatedProducts = async ({
   category,
   shop_category,
 }: RelatedProductsProps) => {
-  const res = await fetchData.get(`/products/${shop_category}/${category}`, {
-    limit: "5",
-  });
+  const res = await fetchData.get("/products", {
+  shop_category,
+  categories: category,
+  limit: "5",
+});
 
   const products: AllProduct[] = res.data.products || [];
   const settings = layoutSettings?.[shop_category];

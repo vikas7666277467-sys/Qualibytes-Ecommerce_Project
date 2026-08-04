@@ -56,10 +56,16 @@ const ProductGrid = async ({ params, searchParams }: CategoryPageProps) => {
         />
       </>
     );
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    return <NoProductFound />;
-  }
+  } catch (error: any) {
+  console.error("========== FULL ERROR ==========");
+  console.error(error);
+  console.error("MESSAGE:", error?.message);
+  console.error("RESPONSE:", error?.response?.data);
+  console.error("STATUS:", error?.response?.status);
+  console.error("STACK:", error?.stack);
+
+  return <NoProductFound />;
+}
 };
 
 export default ProductGrid;

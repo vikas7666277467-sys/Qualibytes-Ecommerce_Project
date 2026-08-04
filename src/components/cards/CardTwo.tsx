@@ -16,6 +16,7 @@ const CardTwo = ({
   shop_category,
 }: AllProduct) => {
   const [imgError, setImgError] = useState(false);
+  console.log("CardTwo:", { _id, title, shop_category });
   return (
     <div className="card-two bg-secondary p-2.5 md:p-4 rounded-lg relative hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
       <Link

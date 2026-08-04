@@ -103,7 +103,7 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
                 />
               </div>
               <div className="flex-grow">
-                <h5 className="font-medium">{item.product?.name || 'Product Unavailable'}</h5>
+                <h5 className="font-medium">{item.product?.title || 'Product Unavailable'}</h5>
                 <p className="text-sm text-muted-foreground">
                   ${(item.price || 0).toFixed(2)} x {item.quantity}
                 </p>

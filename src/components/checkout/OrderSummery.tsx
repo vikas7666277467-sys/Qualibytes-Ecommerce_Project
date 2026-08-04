@@ -84,6 +84,29 @@ const OrderSummery = ({ shippingData, billingData }: OrderSummeryProps) => {
         })),
         total: totalPrice(cartItems) + 20
       });
+      console.log("Cart Items:", cartItems);
+
+console.log(
+  "Order Items:",
+  cartItems.map((item) => ({
+    _id: item._id,
+    productId: (item as any).productId,
+    quantity: item.amount,
+    price: item.price,
+  }))
+);
+  alert(
+  JSON.stringify(
+    cartItems.map((item: any) => ({
+      _id: item._id,
+      id: item.id,
+      originalId: item.originalId,
+      title: item.title,
+    })),
+    null,
+    2
+  )
+);
 
       const orderData = {
         shippingAddress: shippingData,

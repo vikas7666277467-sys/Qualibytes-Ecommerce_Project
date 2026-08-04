@@ -26,17 +26,23 @@ const BookCard = ({
         <div className="mt-3">
           <h3 className="line-clamp-1">{title}</h3>
           <p className="text-muted-foreground mt-1">
-            By{" "}
-            {authors.map((author, index) => (
-              <span key={author}>
-                {index > 0 && index === authors.length - 1 && (
-                  <span> and </span>
-                )}
-                {index > 0 && index < authors.length - 1 && <span>, </span>}
-                {author}
-              </span>
-            ))}
-          </p>
+  By{" "}
+  {authors?.length ? (
+    authors.map((author, index) => (
+      <span key={author}>
+        {index > 0 && index === authors.length - 1 && (
+          <span> and </span>
+        )}
+        {index > 0 && index < authors.length - 1 && (
+          <span>, </span>
+        )}
+        {author}
+      </span>
+    ))
+  ) : (
+    <span>Unknown Author</span>
+  )}
+</p>
         </div>
       </Link>
 

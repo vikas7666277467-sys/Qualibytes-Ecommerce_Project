@@ -21,25 +21,35 @@ export async function GET(request: NextRequest) {
     
     // Filter by shop category
     if (searchParams.has('shop_category')) {
-      query.shop_category = searchParams.get('shop_category');
-    }
-    
-    // Filter by categories
+  const shop = decodeURIComponent(searchParams.get('shop_category') || '');
+
+  if (shop && shop !== 'Select Shop') {
+    query.shop_category = shop;
+  }
+}
+        // Filter by categories
     if (searchParams.has('categories')) {
       const categories = searchParams.get('categories')?.split(',') || [];
       query.categories = { $in: categories };
     }
 
-    // Filter by price range
-    if (searchParams.has('minPrice') || searchParams.has('maxPrice')) {
-      query.price = {};
-      if (searchParams.has('minPrice')) {
-        query.price.$gte = parseFloat(searchParams.get('minPrice') as string);
-      }
-      if (searchParams.has('maxPrice')) {
-        query.price.$lte = parseFloat(searchParams.get('maxPrice') as string);
-      }
-    }
+    const minPrice = searchParams.get("minPrice");
+const maxPrice = searchParams.get("maxPrice");
+
+if (
+  (minPrice && minPrice.trim() !== "") ||
+  (maxPrice && maxPrice.trim() !== "")
+) {
+  query.price = {};
+
+  if (minPrice && minPrice.trim() !== "") {
+    query.price.$gte = Number(minPrice);
+  }
+
+  if (maxPrice && maxPrice.trim() !== "") {
+    query.price.$lte = Number(maxPrice);
+  }
+}
 
     // Pagination
     const page = parseInt(searchParams.get('page') || '1');
@@ -47,21 +57,34 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Sorting
-    let sort: any = { createdAt: -1 };
-    if (searchParams.has('sort')) {
-      const [field, order] = (searchParams.get('sort') as string).split(':');
-      sort = { [field]: order === 'desc' ? -1 : 1 };
-    }
+ let sort: any = { createdAt: -1 };
+
+ const sortParam = searchParams.get("sort");
+
+ if (sortParam && sortParam.trim() !== "") {
+  const [field, order] = sortParam.split(":");
+
+  if (field) {
+    sort = {
+      [field]: order === "desc" ? -1 : 1,
+    };
+  }
+}
 
     const products = await Product.find(query)
       .sort(sort)
       .skip(skip)
       .limit(limit);
 
+    const formattedProducts = products.map((product: any) => ({
+  ...product.toObject(),
+  _id: product.originalId,
+}));
+
     const total = await Product.countDocuments(query);
 
     return NextResponse.json({
-      products,
+      products: formattedProducts,
       pagination: {
         total,
         page,
@@ -69,13 +92,19 @@ export async function GET(request: NextRequest) {
         pages: Math.ceil(total / limit)
       }
     });
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch products' },
-      { status: 500 }
-    );
-  }
+  } catch (error: any) {
+  console.error("========== API ERROR ==========");
+  console.error(error);
+  console.error("MESSAGE:", error?.message);
+  console.error("STACK:", error?.stack);
+
+  return NextResponse.json(
+    {
+      error: error?.message || "Failed to fetch products",
+    },
+    { status: 500 }
+  );
+}
 }
 
 export async function POST(request: NextRequest) {
